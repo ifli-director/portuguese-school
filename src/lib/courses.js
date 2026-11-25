@@ -21,16 +21,19 @@ export const COURSES_2027 = [
   },
   {
     name: "Spring Immersion Experience",
+    datesTBA: true,
     start: [2027, 4, 12],
     end: [2027, 6, 18],
   },
   {
     name: "Summer Immersion Experience",
+    datesTBA: true,
     start: [2027, 7, 5],
     end: [2027, 9, 10],
   },
   {
     name: "Autumn Immersion Experience",
+    datesTBA: true,
     start: [2027, 10, 4],
     end: [2027, 12, 10],
   },
@@ -55,7 +58,12 @@ function toIso([year, month, day]) {
   return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 }
 
+export const DATES_TBA_LABEL = "Dates to be announced";
+
+// Courses marked datesTBA show "Dates to be announced" instead of their
+// provisional dates. Remove the flag once the dates are confirmed.
 export function formatCourseRange(course) {
+  if (course.datesTBA) return DATES_TBA_LABEL;
   const [, startMonth, startDay] = course.start;
   const [endYear, endMonth, endDay] = course.end;
   return `${startDay} ${MONTHS[startMonth - 1]} – ${endDay} ${MONTHS[endMonth - 1]} ${endYear}`;
@@ -63,8 +71,9 @@ export function formatCourseRange(course) {
 
 export function getNextCourse(now = new Date()) {
   const today = lisbonToday(now);
-  const upcoming = COURSES_2027.find((course) => toLocalDate(course.start) >= today);
-  return upcoming ?? COURSES_2027[COURSES_2027.length - 1];
+  const confirmed = COURSES_2027.filter((course) => !course.datesTBA);
+  const upcoming = confirmed.find((course) => toLocalDate(course.start) >= today);
+  return upcoming ?? confirmed[confirmed.length - 1];
 }
 
 export function getNextCourseLabel(now = new Date()) {
