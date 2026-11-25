@@ -3,7 +3,6 @@ import { useState } from "react";
 import { X, CheckCircle2, ArrowRight, ArrowLeft, Loader2 } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { createTestResult } from "@/lib/airtable";
 
 const questions = [
   {
@@ -175,7 +174,12 @@ export default function PortugueseTestModal({ open, onClose, onComplete }) {
         "Firebase ID": docRef.id
       };
 
-      await createTestResult(airtableData);
+      const saveResponse = await fetch('/api/save-test-result', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(airtableData),
+      });
+      if (!saveResponse.ok) throw new Error('Failed to save test result');
 
       // 3. Send results email via Brevo
       await fetch('/api/send-test-results-email', {
