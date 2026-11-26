@@ -23,8 +23,7 @@ export async function generateMetadata() {
   ),
 
   title: {
-    default:
-      "IFLI Portuguese Immersion 2027 - Learn European Portuguese in 10 Weeks",
+    default: "IFLI · Learn European Portuguese",
     template: "%s | IFLI Portuguese Immersion",
   },
 
